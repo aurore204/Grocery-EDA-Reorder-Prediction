@@ -46,14 +46,14 @@ def load_and_merge_data(raw_dir=RAW_DATA_DIR):
     return df
 
 
-def save_processed_data(df, path=PROCESSED_FILE):
+def save_processed_data(df: pd.DataFrame, path: str=PROCESSED_FILE):
 
     os.makedirs(os.path.dirname(path), exist_ok=True)
     df.to_parquet(path, index=False)
     print(f"Données sauvegardées dans {path}")
 
 
-def load_processed_data(path=PROCESSED_FILE):
+def load_processed_data(path: str=PROCESSED_FILE):
 
     if os.path.exists(path):
         return pd.read_parquet(path)

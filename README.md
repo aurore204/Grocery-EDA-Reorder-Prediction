@@ -6,7 +6,8 @@ Analyse exploratoire de données (EDA) d'un site de livraison de courses en lign
 
 ## Structure du repo
 
-grocery-data-analysis/
+```
+T-DAT/
 ├── README.md
 ├── requirements.txt
 ├── .gitignore
@@ -39,10 +40,10 @@ grocery-data-analysis/
 └── docs/
     ├── data_dictionary
     └── methodology
+```
 
 
-
-## 📊 Récupérer les données
+## Récupérer les données
 
 Les fichiers de données ne sont pas inclus dans ce repo (trop volumineux pour GitHub). Ils sont disponibles sur le **Sharepoint du cours C-DEV-120**.
 
