@@ -2,3 +2,6 @@ data/raw/*.csv
 data/processed/*.parquet
 src/_*
 *venv*
+*.pyc
+.vscode
+.idea
