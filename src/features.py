@@ -103,3 +103,29 @@ def add_day_name(df: pd.DataFrame) -> pd.DataFrame:
         ordered=True,
     )
     return df
+
+def add_hour_period(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Regroupe order_hour_of_day en 4 créneaux :
+     - Nuit : 0h - 5h
+     - Matin: 6h - 11h
+     - Après-midi: 12h - 17h
+     - Soir: 18h - 23h
+
+     Utilisé par: Temporalité (patterns horaires)
+    """
+    conditions = [
+        df["order_hour_of_day"].between(0, 5),
+        df["order_hour_of_day"].between(6, 11),
+        df["order_hour_of_day"].between(12, 17),
+        df["order_hour_of_day"].between(18, 23),
+    ]
+    labels = ["Nuit", "Matin", "Après-midi", "Soir"]
+    df["hour_period"] = np.select(conditions, labels, default="Inconnu")
+
+    df["hour_period"] = pd.Categorical(
+        df["hour_period"],
+        categories=["Matin", "Après-midi", "Soir", "Nuit"],
+        ordered=True,
+    )
+    return df
