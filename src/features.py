@@ -63,4 +63,43 @@ def add_cart_size(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 # 3. DIVERSITE DU PANIER (DEPARTEMENT / AISLE)
-    
+
+def add_basket_diversity(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Nombre de départements et de rayons distincts par commande.
+
+    Utilisé par : Rayon/Département
+     - "Dans un panier, combien de départements différents ?"
+     - Lien diversité - volume de commandes
+    """
+    dept_div = df.groupby("order_id")["department_id"].nunique()
+    dept_div.name = "dept_per_order"
+
+    aisle_div = df.groupby("order_id")["aisle_id"].nunique()
+    aisle_div.name = "aisles_per_order"
+
+    df = df.merge(dept_div, on="order_id", how="left")
+    df = df.merge(aisle_div, on="order_id", how="left")
+    return df
+
+# 4. TEMPORALITE : NOMS DE JOURS ET CRENEAUX
+
+def add_day_name(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Converti order_dow (0=dimanche) en nom de jour lisible.
+
+    Utilisé par : Temporalité (heatmap jour x heure),
+                Produits (jour où un produit est le plus acheté)
+    """
+    day_map = {
+        0: "Dimanche", 1: "Lundi", 2: "Mardi", 3: "Mercredi",
+        4: "Jeudi", 5: "Vendredi", 6: "Samedi",
+    }
+    df["day_name"] = df["order_id"].map(day_map)
+
+    df["day_name"] = pd.Categorical(
+        df["day_name"],
+        categories=["Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"],
+        ordered=True,
+    )
+    return df
