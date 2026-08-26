@@ -129,3 +129,30 @@ def add_hour_period(df: pd.DataFrame) -> pd.DataFrame:
         ordered=True,
     )
     return df
+
+# PIPELINE
+
+def enrich_dataframe(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Applique toutes les transformations en une passe
+
+    Usage:
+        from scr.features import enrichi_dataframe
+        data = enrichi_dataframe(data)
+
+    Colonnes ajoutées:
+        - customer_segment   (str)  : occasionnel / typique / fidèle
+        - user_total_orders  (int)  : nb total de commandes du client
+        - cart_size          (int)  : nb de produits dans la commande
+        - dept_per_order     (int)  : nb de départements distincts dans la commande
+        - aisles_per_order   (int)  : nb de rayons distincts dans la commande
+        - day_name           (str)  : Lundi, Mardi, ...
+        - hour_period        (str)  : Matin, Après-midi, Soir, Nuit
+    """
+
+    df = add_customer_segment(df)
+    df = add_cart_size(df)
+    df = add_basket_diversity(df)
+    df = add_day_name(df)
+    df = add_hour_period(df)
+    return df
