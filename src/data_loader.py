@@ -1,10 +1,14 @@
 import pandas as pd
+#import pyarrow as pa
 import os
 
 # Chemins par défaut vers les données
 RAW_DATA_DIR = "data/raw"
 PROCESSED_DATA_DIR = "data/processed"
 PROCESSED_FILE = os.path.join(PROCESSED_DATA_DIR, "merged_orders.parquet")
+
+#pa.set_cpu_count(2)  # Limite le nombre de threads à 2 pour éviter les problèmes de mémoire
+#pa.set_io_thread_count(2)  # Limite le nombre de threads d'E/S à 2 pour éviter les problèmes de mémoire
 
 
 def load_raw_data(raw_dir=RAW_DATA_DIR):
@@ -49,14 +53,14 @@ def load_and_merge_data(raw_dir=RAW_DATA_DIR):
 def save_processed_data(df: pd.DataFrame, path: str=PROCESSED_FILE):
 
     os.makedirs(os.path.dirname(path), exist_ok=True)
-    df.to_parquet(path, index=False)
+    df.to_parquet(path, index=False, engine="fastparquet")
     print(f"Données sauvegardées dans {path}")
 
 
 def load_processed_data(path: str=PROCESSED_FILE):
 
     if os.path.exists(path):
-        return pd.read_parquet(path)
+        return pd.read_parquet(path, engine="fastparquet")
     return None
 
 
