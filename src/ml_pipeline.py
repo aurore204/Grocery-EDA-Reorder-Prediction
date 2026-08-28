@@ -38,7 +38,7 @@ class ReorderPipeline:
     split > features > train
     """
     
-    data: pd.DataFrame
+    data: pd.DataFrame = field(repr=False)
     sample_frac: float = 1.0
     random_state: int = 42
     
