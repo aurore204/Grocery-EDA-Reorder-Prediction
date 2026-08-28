@@ -5,3 +5,5 @@ matplotlib
 seaborn
 plotly
 fastparquet
+scikit-learn
+lightgbm
