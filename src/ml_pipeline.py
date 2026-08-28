@@ -9,7 +9,6 @@ Evaluation
 La dernière commande de chaque user sert de test set, et non de split aléatoire.
 """
 from __future__ import annotations
-
 import pandas as pd
 import numpy as np
 import time
@@ -17,17 +16,10 @@ from dataclasses import dataclass, field
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import (
-    accuracy_score,
-    precision_score,
-    recall_score,
-    f1_score,
-    roc_auc_score,
-    classification_report,
-    confusion_matrix
+    accuracy_score, precision_score, recall_score,
+    f1_score, roc_auc_score, classification_report, confusion_matrix,
 )
 from src.ml_features import build_all_features
-
-# Colonnes exclues de l'entraînement
 
 _ID_COLS = {"user_id", "product_id", "reordered", "order_id", "order_number"}
 
@@ -73,9 +65,9 @@ class ReorderPipeline:
         """Calcule les features sur le train, assemble train et test sets."""
         assert self.train_raw_ is not None and self.test_raw_ is not None, \
             "Appeler .split() avant .build_features()"
-        print("\nETAPE 2: FEature engineering")
+        print("\nETAPE 2: Feature engineering")
         user_feat, prod_feat, up_feat = build_all_features(self.train_raw_)
-
+        
         # Assemblage
         test_set = self._assemble(self.test_raw_, user_feat, prod_feat, up_feat)
         train_set = self._assemble(self.train_raw_, user_feat, prod_feat, up_feat)
@@ -83,7 +75,7 @@ class ReorderPipeline:
         # Échantillonnage optionnel
         if self.sample_frac < 1.0:
             train_set = train_set.sample(frac=self.sample_frac, random_state=self.random_state)
-            print(f"  Échantillonnage → {len(train_set):,} lignes ({self.sample_frac:.0%})")
+            print(f"  Échantillonnage: {len(train_set):,} lignes ({self.sample_frac:.0%})")
 
         # Séparation X / y
         self.feature_cols_ = [c for c in train_set.columns if c not in _ID_COLS]
@@ -165,8 +157,14 @@ class ReorderPipeline:
         return out.fillna(0)
 
     def _default_models(self) -> dict:
+        from sklearn.pipeline import make_pipeline
+        from sklearn.preprocessing import StandardScaler
+
         models = {
-            "LogisticRegression": LogisticRegression(max_iter=500, random_state=self.random_state, n_jobs=-1),
+            "LogisticRegression": make_pipeline(
+                StandardScaler(),
+                LogisticRegression(max_iter=1000, random_state=self.random_state),
+            ),
             "RandomForest": RandomForestClassifier(
                 n_estimators=200, max_depth=12, min_samples_leaf=50,
                 random_state=self.random_state, n_jobs=-1,

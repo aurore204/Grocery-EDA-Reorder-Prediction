@@ -39,18 +39,11 @@ def build_user_features(df: pd.DataFrame) -> pd.DataFrame:
         u_unique_departments=("department_id", "nunique"),
         u_unique_aisles=("aisle_id", "nunique"),
     ).reset_index()
-    
+
     # Taille moyenne du panier
     cart_sizes = df.groupby(["user_id", "order_id"])["product_id"].count()
     avg_cart = cart_sizes.groupby("user_id").mean().reset_index(name="u_avg_cart_size")
     agg = agg.merge(avg_cart, on="user_id", how="left")
-    
-    # Diversité par commande
-    unique_per_order = df.groupby(["user_id", "order_id"])["product_id"].nunique()
-    avg_unique = unique_per_order.groupby("user_id").mean().reset_index(
-        name="u_avg_unique_per_order"
-    )
-    agg = agg.merge(avg_unique, on="user_id", how="left")
 
     return agg
 
