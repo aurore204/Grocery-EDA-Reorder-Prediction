@@ -7,3 +7,4 @@ plotly
 fastparquet
 scipy
 statsmodels
+squarify
