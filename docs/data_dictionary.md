@@ -63,5 +63,4 @@ Ce document décrit chaque champ des données brutes ainsi que les colonnes dér
 ## Points d'attention
 
 - Deux catégories techniques ("missing" et "other") existent parmi les rayons/départements : elles regroupent des produits dont la catégorisation d'origine n'était pas renseignée dans les données sources. Voir l'analyse détaillée dans la section Rayon/Département du notebook.
-- Le fichier `order_products.csv` ne couvre qu'un sous-ensemble des commandes de `orders.csv` (environ 1 million sur 3,4 millions) une 
-  troncature volontaire du fichier source pour en réduire la taille.
+- Le fichier `order_products.csv` ne couvre qu'un sous-ensemble des commandes de `orders.csv` (environ 1 million sur 3,4 millions, soit 92,1% des utilisateurs représentés avec une partie de leur historique de commandes). Les `order_id` présents dans ce fichier se suivent presque sans interruption (de 2 à environ 1 133 485), ce qui indique un sous-ensemble continu des commandes. La raison exacte de cette troncature n'est pas connue avec certitude — voir l'investigation détaillée dans `01_data_loading_cleaning.ipynb`.
