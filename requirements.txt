@@ -7,3 +7,6 @@ plotly
 fastparquet
 scikit-learn
 lightgbm
+scipy
+statsmodels
+squarify
