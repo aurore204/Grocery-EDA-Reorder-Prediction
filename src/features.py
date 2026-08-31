@@ -95,7 +95,7 @@ def add_day_name(df: pd.DataFrame) -> pd.DataFrame:
         0: "Dimanche", 1: "Lundi", 2: "Mardi", 3: "Mercredi",
         4: "Jeudi", 5: "Vendredi", 6: "Samedi",
     }
-    df["day_name"] = df["order_id"].map(day_map)
+    df["day_name"] = df["order_dow"].map(day_map)
 
     df["day_name"] = pd.Categorical(
         df["day_name"],
