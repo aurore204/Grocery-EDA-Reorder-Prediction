@@ -43,6 +43,7 @@ class ReorderPipeline:
     y_test_: pd.Series | None = field(default=None, repr=False)
     feature_cols_: list | None = field(default=None, repr=False)
     results_: dict = field(default_factory=dict, repr=False)
+    results_df_: pd.DataFrame | None = field(default=None, repr=False)
     
     
     # ETAPE 1: Split temporel
@@ -96,7 +97,7 @@ class ReorderPipeline:
         if models is None:
             models = self._default_models()
 
-        print("\nETAPE 3: Entraînement du model")
+        print("\nETAPE 3: Entrainement et evaluation")
         rows = []
         for name, model in models.items():
             t0 = time.time()
@@ -128,7 +129,17 @@ class ReorderPipeline:
     def get_feature_importance(self, model_name: str) -> pd.DataFrame:
         assert self.feature_cols_ is not None, "Appeler .build_features() d'abord"
         model = self.results_[model_name]["model"]
-        imp = model.feature_importances_ if hasattr(model, "feature_importances_") else np.abs(model.coef_[0])
+
+        # Si le modèle est wrappé dans un Pipeline (ex: StandardScaler + LogReg)
+        estimator = model[-1] if hasattr(model, "__getitem__") else model
+
+        if hasattr(estimator, "feature_importances_"):
+            imp = estimator.feature_importances_
+        elif hasattr(estimator, "coef_"):
+            imp = np.abs(estimator.coef_[0])
+        else:
+            raise ValueError(f"Pas d'importance disponible pour {model_name}")
+
         return (pd.DataFrame({"feature": self.feature_cols_, "importance": imp})
                 .sort_values("importance", ascending=False).reset_index(drop=True))
 

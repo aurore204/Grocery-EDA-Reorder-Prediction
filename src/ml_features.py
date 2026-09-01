@@ -22,14 +22,13 @@ def build_user_features(df: pd.DataFrame) -> pd.DataFrame:
     """Profil d'achat global par utilisateur
 
     Features construites :
-        u_total_orders         : nombre total de commandes
-        u_avg_cart_size        : taille moyenne du panier
-        u_avg_days_between     : intervalle moyen entre commandes (jours)
-        u_reorder_rate         : taux de réachat personnel global
-        u_unique_products      : nombre de produits distincts commandés
-        u_unique_departments   : diversité en départements
-        u_unique_aisles        : diversité en rayons
-        u_avg_unique_per_order : produits distincts par commande (moyenne)
+        u_total_orders       : nombre total de commandes
+        u_avg_days_between   : intervalle moyen entre commandes (jours)
+        u_reorder_rate       : taux de réachat personnel global
+        u_unique_products    : nombre de produits distincts commandés
+        u_unique_departments : diversité en départements
+        u_unique_aisles      : diversité en rayons
+        u_avg_cart_size      : taille moyenne du panier
     """
     agg = df.groupby("user_id").agg(
         u_total_orders=("order_number", "max"),
@@ -39,12 +38,12 @@ def build_user_features(df: pd.DataFrame) -> pd.DataFrame:
         u_unique_departments=("department_id", "nunique"),
         u_unique_aisles=("aisle_id", "nunique"),
     ).reset_index()
-
+ 
     # Taille moyenne du panier
     cart_sizes = df.groupby(["user_id", "order_id"])["product_id"].count()
     avg_cart = cart_sizes.groupby("user_id").mean().reset_index(name="u_avg_cart_size")
     agg = agg.merge(avg_cart, on="user_id", how="left")
-
+ 
     return agg
 
 def build_product_features(df: pd.DataFrame) -> pd.DataFrame:
@@ -52,7 +51,6 @@ def build_product_features(df: pd.DataFrame) -> pd.DataFrame:
 
     Features construites :
         p_total_orders      : nombre de commandes contenant ce produit
-        p_total_units       : nombre total d'unités vendues
         p_reorder_rate      : taux de réachat global du produit
         p_unique_users      : nombre d'acheteurs uniques
         p_avg_cart_position : position moyenne dans le panier
@@ -60,7 +58,6 @@ def build_product_features(df: pd.DataFrame) -> pd.DataFrame:
     """
     agg = df.groupby("product_id").agg(
         p_total_orders=("order_id", "nunique"),
-        p_total_units=("product_id", "count"),
         p_reorder_rate=("reordered", "mean"),
         p_unique_users=("user_id", "nunique"),
         p_avg_cart_position=("add_to_cart_order", "mean"),
@@ -71,7 +68,7 @@ def build_product_features(df: pd.DataFrame) -> pd.DataFrame:
     organic["p_is_organic"] = organic["product_name"].str.contains(
         r"\borganic\b", case=False, na=False
     ).astype(int)
-
+ 
     agg = agg.merge(organic[["product_id", "p_is_organic"]], on="product_id", how="left")
     return agg
 
@@ -82,7 +79,6 @@ def build_user_product_features(df: pd.DataFrame) -> pd.DataFrame:
     Features construites :
         up_nb_orders         : fois où ce user a commandé ce produit
         up_reorder_rate      : taux de réachat de ce user pour ce produit
-        up_avg_cart_position : position moyenne de ce produit dans le panier du user
         up_last_order_number : dernière commande contenant ce produit
         up_order_ratio       : % des commandes du user contenant ce produit
         up_orders_since_last : commandes écoulées depuis le dernier achat
@@ -90,7 +86,6 @@ def build_user_product_features(df: pd.DataFrame) -> pd.DataFrame:
     up = df.groupby(["user_id", "product_id"]).agg(
         up_nb_orders=("order_id", "nunique"),
         up_reorder_rate=("reordered", "mean"),
-        up_avg_cart_position=("add_to_cart_order", "mean"),
         up_last_order_number=("order_number", "max"),
     ).reset_index()
 
@@ -100,14 +95,14 @@ def build_user_product_features(df: pd.DataFrame) -> pd.DataFrame:
     )
     up = up.merge(user_total, on="user_id", how="left")
     up["up_order_ratio"] = up["up_nb_orders"] / up["_u_total_distinct_orders"]
-
+ 
     # Commandes écoulées depuis le dernier achat de ce produit
     user_max = df.groupby("user_id")["order_number"].max().reset_index(
         name="_u_max_order_number"
     )
     up = up.merge(user_max, on="user_id", how="left")
     up["up_orders_since_last"] = up["_u_max_order_number"] - up["up_last_order_number"]
-
+ 
     # Nettoyage des colonnes temporaires
     up = up.drop(columns=["_u_total_distinct_orders", "_u_max_order_number"])
     return up
@@ -128,14 +123,14 @@ def build_all_features(df: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame, pd
     """
     print("  [1/3] Features utilisateur...")
     user_feat = build_user_features(df)
-    print(f"  {user_feat.shape[1] - 1} features, {len(user_feat):,} users")
-
+    print(f"   {user_feat.shape[1] - 1} features, {len(user_feat):,} users")
+ 
     print("  [2/3] Features produit...")
     prod_feat = build_product_features(df)
     print(f"  {prod_feat.shape[1] - 1} features, {len(prod_feat):,} produits")
-
+ 
     print("  [3/3] Features user × produit...")
     up_feat = build_user_product_features(df)
     print(f"  {up_feat.shape[1] - 2} features, {len(up_feat):,} paires")
-
+ 
     return user_feat, prod_feat, up_feat
