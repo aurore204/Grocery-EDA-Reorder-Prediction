@@ -56,6 +56,7 @@ Une fois téléchargés, placez les 5 fichiers CSV dans `data/raw/` :
 
 ```
 data/raw/
+
 ├── aisles.csv
 ├── departments.csv
 ├── order_products.csv
