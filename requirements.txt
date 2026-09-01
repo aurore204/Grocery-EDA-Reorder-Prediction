@@ -10,3 +10,4 @@ lightgbm
 scipy
 statsmodels
 squarify
+nbconvert==7.17.1
