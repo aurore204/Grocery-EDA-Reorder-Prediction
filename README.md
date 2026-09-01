@@ -1,7 +1,5 @@
 # T-DAT - Grocery EDA & Reorder Prediction
 
-## Français
-
 ### Objectif du projet
 
 Analyse exploratoire de données (EDA) et prédiction par machine learning sur un dataset réel anonymisé de livraison de courses en ligne, contenant plus de **3 millions de commandes** et **200 000 utilisateurs**.
