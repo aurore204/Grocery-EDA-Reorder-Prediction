@@ -22,14 +22,13 @@ def build_user_features(df: pd.DataFrame) -> pd.DataFrame:
     """Profil d'achat global par utilisateur
 
     Features construites :
-        u_total_orders         : nombre total de commandes
-        u_avg_cart_size        : taille moyenne du panier
-        u_avg_days_between     : intervalle moyen entre commandes (jours)
-        u_reorder_rate         : taux de réachat personnel global
-        u_unique_products      : nombre de produits distincts commandés
-        u_unique_departments   : diversité en départements
-        u_unique_aisles        : diversité en rayons
-        u_avg_unique_per_order : produits distincts par commande (moyenne)
+        u_total_orders       : nombre total de commandes
+        u_avg_days_between   : intervalle moyen entre commandes (jours)
+        u_reorder_rate       : taux de réachat personnel global
+        u_unique_products    : nombre de produits distincts commandés
+        u_unique_departments : diversité en départements
+        u_unique_aisles      : diversité en rayons
+        u_avg_cart_size      : taille moyenne du panier
     """
     agg = df.groupby("user_id").agg(
         u_total_orders=("order_number", "max"),
@@ -52,7 +51,6 @@ def build_product_features(df: pd.DataFrame) -> pd.DataFrame:
 
     Features construites :
         p_total_orders      : nombre de commandes contenant ce produit
-        p_total_units       : nombre total d'unités vendues
         p_reorder_rate      : taux de réachat global du produit
         p_unique_users      : nombre d'acheteurs uniques
         p_avg_cart_position : position moyenne dans le panier
