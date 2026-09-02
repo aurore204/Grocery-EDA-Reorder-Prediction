@@ -9,7 +9,7 @@ L'objectif est d'identifier des tendances et comportements d'achat exploitables,
 ### Structure du repo
 
 ```
-T-DAT/
+T-DAT-600-PAR_11/
 ├── README.md
 ├── requirements.txt
 ├── .gitignore
@@ -27,17 +27,15 @@ T-DAT/
 ├── grocery_eda.ipynb                  # Notebook final livrable (EDA)
 ├── grocery_eda.html                   # Export HTML pour partage
 │
-├── notebooks/                         # Notebooks d'exploration (non livrés)
+├── notebooks/                         # Notebooks d'analyse thématiques
 │   ├── 01_data_loading_cleaning.ipynb
-│   ├── 02_merge_feature_eng.ipynb
-│   ├── 03_eda_questions_1_to_6.ipynb
-│   ├── 04_eda_questions_7_to_12.ipynb
-│   ├── 05_business_insights.ipynb
-│   ├── 06_bonus_clustering.ipynb
-│   └── 07_ml_reorder_prediction.ipynb # Pipeline ML prédiction de réachat
+│   ├── 02_departments_aisles.ipynb
+│   ├── 03_products_analysis.ipynb
+│   ├── 04_behavior_evolution.ipynb
+│   ├── 05_ml_reorder_prediction.ipynb  # Pipeline ML de prédiction de réachat
+│   └── 06_temporality.ipynb
 │
 ├── src/                               # Fonctions utilitaires partagées
-│   ├── __init__.py
 │   ├── data_loader.py                 # Chargement, nettoyage, fusion des tables
 │   ├── features.py                    # Feature engineering EDA
 │   ├── ml_features.py                 # Feature engineering ML (user, produit, user×produit)
@@ -96,7 +94,7 @@ jupyter notebook grocery_eda.ipynb
 Pour le notebook ML :
 
 ```bash
-jupyter notebook notebooks/07_ml_reorder_prediction.ipynb
+jupyter notebook notebooks/05_ml_reorder_prediction.ipynb
 ```
 
 ### Outils utilisés
@@ -113,7 +111,7 @@ jupyter notebook notebooks/07_ml_reorder_prediction.ipynb
 | **squarify** | Treemaps statiques | Visualisation proportionnelle des catégories de produits |
 | **scikit-learn** | ML : modèles, métriques, preprocessing | Standard de l'industrie, API cohérente et reproductible |
 | **LightGBM** | Gradient boosting | Plus rapide que XGBoost sur les gros datasets tabulaires |
-| **pyarrow** | Lecture/écriture Parquet | Format colonnaire rapide et compact pour le cache des données fusionnées |
+| **fastparquet** | Lecture/écriture Parquet | Format colonnaire rapide et compact pour le cache des données fusionnées |
 | **jupyter** | Environnement de développement | Standard pour les livrables d'analyse exploratoire |
 
 Voir [`docs/methodology.md`](docs/methodology.md) pour une justification détaillée de chaque choix.
