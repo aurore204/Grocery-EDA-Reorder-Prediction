@@ -97,5 +97,6 @@ Certaines analyses impliquent des centaines de valeurs à égalité (ex: produit
  
 ## Diversité des visualisations
  
+ 
 Un même type de graphique n'est jamais réutilisé pour des besoins différents (comparaison,distribution, proportion, relation), par exemple, la section Produits combine histogramme, bar chart, bar chart groupé et heatmap selon le besoin de chaque question.
 
