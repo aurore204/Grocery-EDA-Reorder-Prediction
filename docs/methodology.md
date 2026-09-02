@@ -86,3 +86,15 @@ La Logistic Regression est enveloppée dans un `StandardScaler` car les features
 | Recall | Couverture des vrais positifs ("combien de réachats réels sont détectés ?") |
 | F1-score | Moyenne harmonique precision/recall — métrique principale de comparaison |
 | ROC-AUC | Capacité du modèle à classer correctement les probabilités |
+
+## Démarche d'analyse
+ 
+Pour chaque question, une hypothèse de départ est formulée avant l'exploration des données, puis confrontée aux résultats obtenus. Cette approche permet de vérifier si l'intuition initiale est confirmée, infirmée, ou seulement partiellement correcte.
+ 
+## Gestion des classements avec égalités multiples
+ 
+Certaines analyses impliquent des centaines de valeurs à égalité (ex: produits commandés une seule fois), rendant un simple "top N" peu fiable. Dans ces cas, les valeurs sont regroupées par tranches (`pd.cut`) plutôt que classées individuellement.
+ 
+## Diversité des visualisations
+ 
+Un même type de graphique n'est jamais réutilisé pour des besoins différents (comparaison,distribution, proportion, relation), par exemple, la section Produits combine histogramme, bar chart, bar chart groupé et heatmap selon le besoin de chaque question.
