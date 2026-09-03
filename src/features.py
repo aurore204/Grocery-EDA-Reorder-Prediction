@@ -130,6 +130,30 @@ def add_hour_period(df: pd.DataFrame) -> pd.DataFrame:
     )
     return df
 
+# 5. REACHAT DES PRODUITS
+def reorder_rate_by_group(df, group_cols, reorder_col="reordered"):
+    """Calcule le taux de réachat pour un groupement arbitraire.
+
+    Args:
+        df (_type_): pd.DataFrame, données ligne-produit
+        group_cols : list[str] — colonnes de groupement (ex: ["department", "customer_segment"])
+        reorder_col : str — colonne binaire de réachat
+
+    Returns:
+        pd.DataFrame avec colonnes group_cols + [total, nb_reorders, taux_reachat]
+    """
+    stats = df.groupby(group_cols)[reorder_col].agg(
+        total="count",
+        nb_reorders="sum"
+    ).reset_index()
+    stats["taux_reachat"] = (stats["nb_reorders"] / stats["total"]).round(4)
+    return stats
+
+def reorder_evolution(df, x_col="order_number", max_x=60):
+    """Taux de réachat par numéro de commande, plafonné à max_x."""
+    subset = df[df[x_col] <= max_x]
+    return reorder_rate_by_group(subset, [x_col]) 
+
 # PIPELINE
 
 def enrich_dataframe(df: pd.DataFrame) -> pd.DataFrame:

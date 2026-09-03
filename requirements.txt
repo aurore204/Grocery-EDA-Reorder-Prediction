@@ -5,3 +5,10 @@ matplotlib
 seaborn
 plotly
 fastparquet
+scikit-learn
+lightgbm
+scipy
+statsmodels
+squarify
+nbconvert==7.17.1
+nbdime   
